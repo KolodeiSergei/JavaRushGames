@@ -1,4 +1,4 @@
-
+package MinesWeeper;
 
 import com.javarush.engine.cell.Color;
 import com.javarush.engine.cell.Game;
@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Saper extends Game {
     private static final int SIDE = 9;
-    private GameObject[][] gameField = new GameObject[SIDE][SIDE];
+    private GameObjectSaper[][] gameField = new GameObjectSaper[SIDE][SIDE];
     private int countMinesOnField;
 
     final String MINE="\uD83D\uDCA3";
@@ -36,7 +36,7 @@ public class Saper extends Game {
                 if (isMine) {
                     countMinesOnField++;
                 }
-                gameField[x][y] = new GameObject(x, y, isMine);
+                gameField[x][y] = new GameObjectSaper(x, y, isMine);
                 setCellColor(x, y, Color.BLUE);
 
             }
@@ -46,17 +46,17 @@ public class Saper extends Game {
         isGameStopped=false;
     }
 
-    private List<GameObject> getNeighbors(GameObject gameObject) {
-        List<GameObject> result = new ArrayList<>();
-        for (int x = gameObject.x - 1; x <= gameObject.x + 1; x++) {
-            for (int y = gameObject.y - 1; y <= gameObject.y + 1; y++) {
+    private List<GameObjectSaper> getNeighbors(GameObjectSaper gameObjectSaper) {
+        List<GameObjectSaper> result = new ArrayList<>();
+        for (int x = gameObjectSaper.x - 1; x <= gameObjectSaper.x + 1; x++) {
+            for (int y = gameObjectSaper.y - 1; y <= gameObjectSaper.y + 1; y++) {
                 if (y < 0 || y >= SIDE) {
                     continue;
                 }
                 if (x < 0 || x >= SIDE) {
                     continue;
                 }
-                if (gameField[x][y] == gameObject) {
+                if (gameField[x][y] == gameObjectSaper) {
                     continue;
                 }
                 result.add(gameField[x][y]);
@@ -81,7 +81,7 @@ public class Saper extends Game {
         }
     }
     private void openTile(int x,int y){
-        GameObject gameTile = gameField[x][y];
+        GameObjectSaper gameTile = gameField[x][y];
         if(isGameStopped||gameTile.isFlag|| gameTile.isOpen) return;
         gameTile.isOpen=true;
         countClosedTiles--;
@@ -93,8 +93,8 @@ public class Saper extends Game {
         }else if(gameTile.countMineNeighbors==0){
 
             setCellValue(x,y,"");
-            List<GameObject> neighbors = getNeighbors(gameTile);
-            for (GameObject neighbor : neighbors) {
+            List<GameObjectSaper> neighbors = getNeighbors(gameTile);
+            for (GameObjectSaper neighbor : neighbors) {
                 if (!neighbor.isOpen) {
                     openTile(neighbor.x, neighbor.y);
                 }
@@ -107,7 +107,7 @@ public class Saper extends Game {
     }
 
     private void markTile(int x,int y){
-        GameObject gameTile = gameField[x][y];
+        GameObjectSaper gameTile = gameField[x][y];
         if(isGameStopped|| gameTile.isOpen) return;
         if(countFlags!=0 && !gameTile.isFlag){
             gameTile.isFlag=true;
