@@ -28,17 +28,15 @@ public class TwentyFortyEigth extends Game {
         for (int x = 0; x < SIDE; x++) {
             for (int y = 0; y < SIDE; y++) {
                 setCellColoredNumber(x, y, gameField[y][x]);
-
             }
         }
+        setScore(score);
 
     }
 
     private void createNewNumber() {
         boolean isCreated = false;
         if (getMaxTileValue() == 2048) win();
-        if (!canUseMove()) gameOver();
-
         do {
             int x = getRandomNumber(SIDE);
             int y = getRandomNumber(SIDE);
@@ -134,7 +132,9 @@ public class TwentyFortyEigth extends Game {
 
     @Override
     public void onKeyPress(Key key) {
+        if (!canUseMove()) gameOver();
         switch (key) {
+
             case LEFT -> {
                 if (!isGameStopped) moveLeft();
             }
