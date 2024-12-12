@@ -1,4 +1,4 @@
-package Racer;
+package Racer.road;
 
 public enum RoadObjectType {
     CAR,

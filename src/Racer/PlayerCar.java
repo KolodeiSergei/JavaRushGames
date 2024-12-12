@@ -1,6 +1,8 @@
 package Racer;
 
 
+import Racer.road.RoadManager;
+
 public class PlayerCar extends GameObject {
     private static int playerCarHeight = ShapeMatrix.PLAYER.length;
     public int speed = 1;
@@ -31,6 +33,9 @@ public class PlayerCar extends GameObject {
 
     public Direction getDirection() {
         return direction;
+    }
+    public void stop(){
+        matrix=ShapeMatrix.PLAYER_DEAD;
     }
 }
 

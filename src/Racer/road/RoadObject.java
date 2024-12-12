@@ -1,4 +1,7 @@
-package Racer;
+package Racer.road;
+
+import Racer.GameObject;
+import Racer.ShapeMatrix;
 
 public class RoadObject extends GameObject {
     public RoadObjectType type;
