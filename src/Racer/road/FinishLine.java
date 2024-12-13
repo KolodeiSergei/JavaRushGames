@@ -18,8 +18,9 @@ public class FinishLine extends GameObject {
 
     public void move(int boost) {
         if (!isVisible) {
-            y += boost;
+            return;
         }
+        y += boost;
     }
 
     public boolean isCrossed(PlayerCar playerCar) {
