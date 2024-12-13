@@ -1,5 +1,6 @@
 package Racer;
 
+import Racer.road.FinishLine;
 import Racer.road.RoadManager;
 import com.javarush.engine.cell.*;
 
@@ -9,10 +10,14 @@ public class RacerGame extends Game {
     public static final int HEIGHT = 64;
     public static final int CENTER_X = WIDTH / 2;
     public static final int ROADSIDE_WIDTH = 14;
+    private static final int RACE_GOAL_CARS_COUNT = 40;
     private RoadMarking roadMarking;
     private RoadManager roadManager;
     private PlayerCar player;
     private boolean isGameStopped;
+    private FinishLine finishLine;
+    private ProgressBar progressBar;
+    private int score;
 
     @Override
     public void initialize() {
@@ -26,7 +31,10 @@ public class RacerGame extends Game {
         roadMarking = new RoadMarking();
         player = new PlayerCar();
         roadManager = new RoadManager();
+        finishLine = new FinishLine();
+        progressBar =new ProgressBar(RACE_GOAL_CARS_COUNT);
         setTurnTimer(40);
+        score=3500;
         drawScene();
     }
 
@@ -49,13 +57,13 @@ public class RacerGame extends Game {
         roadMarking.draw(this);
         player.draw(this);
         roadManager.draw(this);
+        finishLine.draw(this);
+        progressBar.draw(this);
     }
 
     @Override
     public void setCellColor(int x, int y, Color color) {
-        if (x > WIDTH - 1 || y > HEIGHT - 1 || x < 0 || y < 0) {
-            return;
-        } else {
+        if (!(x > WIDTH - 1 || y > HEIGHT - 1 || x < 0 || y < 0)) {
             super.setCellColor(x, y, color);
         }
     }
@@ -63,7 +71,10 @@ public class RacerGame extends Game {
     private void moveAll() {
         roadMarking.move(player.speed);
         roadManager.move(player.speed);
+        finishLine.move(player.speed);
+        progressBar.move(roadManager.getPassedCarsCount());
         player.move();
+
     }
 
     @Override
@@ -71,9 +82,19 @@ public class RacerGame extends Game {
         if (roadManager.checkCrush(player)) {
             gameOver();
             drawScene();
+            return;
         }
-        moveAll();
         roadManager.generateNewRoadObjects(this);
+        if (roadManager.getPassedCarsCount() >= RACE_GOAL_CARS_COUNT) {
+            finishLine.show();
+        }
+        if(finishLine.isCrossed(player)){
+            win();
+            drawScene();
+        }
+        score-=5;
+        setScore(score);
+        moveAll();
         drawScene();
 
     }
@@ -93,8 +114,7 @@ public class RacerGame extends Game {
     @Override
     public void onKeyReleased(Key key) {
         switch (key) {
-            case RIGHT -> player.setDirection(Direction.NONE);
-            case LEFT -> player.setDirection(Direction.NONE);
+            case RIGHT, LEFT -> player.setDirection(Direction.NONE);
             case UP -> player.speed = 1;
         }
     }
@@ -105,5 +125,10 @@ public class RacerGame extends Game {
         stopTurnTimer();
         player.stop();
 
+    }
+    private void win(){
+        isGameStopped = true;
+        showMessageDialog(Color.BLACK, "YOU WIN", Color.AQUA, 50);
+        stopTurnTimer();
     }
 }

@@ -3,6 +3,8 @@ package Racer.road;
 import Racer.GameObject;
 import Racer.ShapeMatrix;
 
+import java.util.List;
+
 public class RoadObject extends GameObject {
     public RoadObjectType type;
     public int speed;
@@ -15,20 +17,10 @@ public class RoadObject extends GameObject {
         this.height = matrix.length;
     }
 
-    /**
-     * Метод, отвечающий за передвижение препятствия. У препятствия может быть своя скорость и дополнительная,
-     * которая зависит от скорости движения игрока.
-     */
-    public void move(int boost) {
+    public void move(int boost, List<RoadObject> list) {
         this.y += boost;
     }
 
-    /**
-     * Проверяет текущий объект и объект, который пришел в качестве параметра, на пересечение их изображений
-     * с учетом дистанции distance.
-     * Например, если в качестве distance передать число 12, а 2 объекта расположены друг от друга на расстоянии меньшем,
-     * чем 12 ячеек игрового поля, метод вернет true. В ином случае вернет false.
-     */
     public boolean isCollisionWithDistance(RoadObject roadObject, int distance) {
         if ((x - distance > roadObject.x + roadObject.width) || (x + width + distance < roadObject.x)) {
             return false;
@@ -41,9 +33,6 @@ public class RoadObject extends GameObject {
         return true;
     }
 
-    /**
-     * Возвращает матрицу изображения объекта в зависимости от его типа.
-     */
     private static int[][] getMatrix(RoadObjectType type) {
         switch (type) {
             case CAR:
@@ -61,9 +50,6 @@ public class RoadObject extends GameObject {
         }
     }
 
-    /**
-     * Возвращает высоту объекта.
-     */
     public static int getHeight(RoadObjectType type) {
         return getMatrix(type).length;
     }
